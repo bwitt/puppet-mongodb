@@ -108,7 +108,13 @@ class mongodb::repo (
           'Ubuntu' => "https://${repo_domain}/apt/ubuntu",
           default  => undef
         }
-        $_keyring_location = "https://www.mongodb.org/static/pgp/server-${version}.asc"
+        # Since 9.0 the signing key is per major version
+        if versioncmp($version, '9.0') >= 0 {
+          $_key_version = split($version, '\.')[0]
+        } else {
+          $_key_version = $version
+        }
+        $_keyring_location = "https://www.mongodb.org/static/pgp/server-${_key_version}.asc"
         $release     = "${facts['os']['distro']['codename']}/${repo_path}/${version}"
         $repos       = $facts['os']['name'] ? {
           'Debian' => 'main',

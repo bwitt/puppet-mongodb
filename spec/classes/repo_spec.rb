@@ -57,6 +57,32 @@ describe 'mongodb::repo' do
         end
       end
 
+      describe 'with version 8.0', if: facts[:os]['family'] == 'Debian' do
+        let :params do
+          {
+            version: '8.0',
+          }
+        end
+
+        it do
+          is_expected.to contain_apt__source('mongodb')
+            .with_key('dir' => '/usr/share/keyrings/', 'name' => 'mongodb-server-8.0.asc', 'source' => 'https://www.mongodb.org/static/pgp/server-8.0.asc')
+        end
+      end
+
+      describe 'with version 9.0', if: facts[:os]['family'] == 'Debian' do
+        let :params do
+          {
+            version: '9.0',
+          }
+        end
+
+        it do
+          is_expected.to contain_apt__source('mongodb')
+            .with_key('dir' => '/usr/share/keyrings/', 'name' => 'mongodb-server-9.asc', 'source' => 'https://www.mongodb.org/static/pgp/server-9.asc')
+        end
+      end
+
       describe 'with proxy' do
         let :params do
           {
